@@ -19,6 +19,7 @@ const char* password = "Lab@ingenico1";
 const char* PARAM_STRING = "inputString"; // valor 1
 const char* PARAM_STRING2 = "inputString2"; // valor 1
 const char* PARAM_STRING3 = "inputString3"; // valor 1
+const char* PARAM_STRING4 = "inputString4"; // valor 1
 
 // Define NTP Client to get time
 
@@ -48,13 +49,17 @@ const char index_html[] PROGMEM = R"rawliteral(
             margin: 0px auto;
             text-align: center;
         }
-        h2 { font-size: 3.0rem; }
+        h1 { font-size: 3.0rem; }
         p { font-size: 3.0rem; }
         .units { font-size: 1.2rem; }
         .ds-labels {
             font-size: 1.5rem;
             vertical-align: middle;
             padding-bottom: 15px;
+        }
+        .container{
+            display: flex;
+            justify-content: space-evenly;
         }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -68,19 +73,31 @@ const char index_html[] PROGMEM = R"rawliteral(
 </head>
 
 <body>
-    <h2>Ejemplo de Network Time Protocol (NTP)</h2>
-    <h3>Adem&aacute;s se muestra estado de salida en base a variables </h3>
+    <h1>Ingenico Colombia</h1>
     <p>
-        <i class="fas fa-thermometer-half" style="color:#04463d;"></i>
         <span class="ds-labels">Hoy es</span>
         <span id="fecha">%inputString%</span>
     </p>
     <p>
-        <i class="fas fa-thermometer-half" style="color:#059e8a;"></i>
         <span class="ds-labels">Hora</span>
         <span id="hora">%inputString2%</span>
     </p>
-    <p>Estado del Termo<span id="temperaturec">%inputString3%</span></p>
+    <h2>Termohigr&oacute;metro</h2>
+    <div class="container">
+        <p>
+            <i class="fas fa-thermometer-half" style="color:#059e8a;"></i>
+            <span class="ds-labels">Temperatura</span>
+            <span id="temperaturec">%inputString3%</span>
+        </p>
+        <p>
+            <i class="fas fa-thermometer-half" style="color:#059e8a;"></i>
+            <span class="ds-labels">Humedad</span>
+            <span id="humidity">%inputString4%</span>
+        </p>
+    </div>
+    <footer>
+        <em>By KrlozMedina, visited <a href="http://krlozmedina.com">krlozmedina.com</a></em>
+    </footer>
 </body>
 
 <script type="text/javascript">
@@ -124,7 +141,12 @@ const char index_html[] PROGMEM = R"rawliteral(
   int currentYear = ptm->tm_year+1900;
   Serial.print(currentYear);
   if (var == "inputString3" and currentYear==2023){
-    String  fuego = "<img src= https://openlab.bmcc.cuny.edu/jasmine-bush-portfolio/wp-content/uploads/sites/302/2020/02/flame-1.gif width= 250 height=166  >";
+    // String  fuego = "<img src= https://openlab.bmcc.cuny.edu/jasmine-bush-portfolio/wp-content/uploads/sites/302/2020/02/flame-1.gif width= 250 height=166  >";
+    String fuego = "20°C";
+    return fuego;
+  }
+  if (var == "inputString4"){
+    String fuego = "80%";
     return fuego;
   }
   
