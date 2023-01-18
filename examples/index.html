@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <style>
+        html {
+            font-family: Arial;
+            display: inline-block;
+            margin: 0px auto;
+            text-align: center;
+        }
+        h2 { font-size: 3.0rem; }
+        p { font-size: 3.0rem; }
+        .units { font-size: 1.2rem; }
+        .ds-labels {
+            font-size: 1.5rem;
+            vertical-align: middle;
+            padding-bottom: 15px;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ESP Input Form</title>
+    <script>
+        function submitMessage() {
+            alert("Guardamos los datos en la placa Nodemcu por  ESP SPIFFS");
+            setTimeout(function () { document.location.reload(false); }, 500);
+        }
+    </script>
+</head>
+
+<body>
+    <h2>Ejemplo de Network Time Protocol (NTP)</h2>
+    <h3>Adem&aacute;s se muestra estado de salida en base a variables </h3>
+    <p>
+        <i class="fas fa-thermometer-half" style="color:#04463d;"></i>
+        <span class="ds-labels">Hoy es</span>
+        <span id="fecha">%inputString%</span>
+    </p>
+    <p>
+        <i class="fas fa-thermometer-half" style="color:#059e8a;"></i>
+        <span class="ds-labels">Hora</span>
+        <span id="hora">%inputString2%</span>
+    </p>
+    <p>Estado del Termo<span id="temperaturec">%inputString3%</span></p>
+</body>
+
+<script type="text/javascript">
+    function actualizar() { location.reload(true); }
+    //FunciÃ³n para actualizar cada 4 segundos(4000 milisegundos)
+    setInterval("actualizar()", 4000);
+</script>
+</html>
