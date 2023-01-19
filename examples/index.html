@@ -5,7 +5,6 @@
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <title>Sensor de temperatura - By Parzibyte</title>
-    <!-- <link rel='stylesheet' href='https://unpkg.com/bulma@0.9.1/css/bulma.min.css'> -->
     <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
 </head>
 
@@ -15,12 +14,27 @@
             background-color: #395B64;
             color: rgb(196, 195, 195);
             text-align: center;
-            font-family: BlinkMacSystemFont,-apple-system,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-family: BlinkMacSystemFont,-apple-system,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,'Fira Sans','Droid Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+        }
+        .container{
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
         }
         .columns{
             display: flex;
             justify-content: space-evenly;
-            padding: 50px 0;
+            flex-wrap: wrap;
+        }
+        .is-size-4{
+            font-size: 32px;
+            color: #ffdd57;
+            margin: 0;
+        }
+        .is-size-1{
+            font-size: 40px;
+            margin: 0;
         }
     </style>
     <section id='app' class='hero is-link is-fullheight'>
@@ -28,7 +42,7 @@
             <div class='container'>
                 <div class='columns has-text-centered'>
                     <div class='column'>
-                        <h1 style='font-size: 2.5rem'>Termómetro</h1> <i class='fa' :class='claseTermometro'
+                        <h1 style='font-size: 2.5rem'>Termohigrómetro</h1> <i class='fa' :class='claseTermometro'
                             style='font-size: 4rem;'></i>
                     </div>
                 </div>
@@ -44,15 +58,15 @@
                 </div>
                 <div class='columns'>
                     <div class='column'>
-                        <p>Última lectura: Hace <strong class='has-text-white'>{{ultimaLectura}}</strong> segundo(s)</p>
-                        <p class='is-size-5'><i class='fa fa-code'></i> con <i class='fa fa-heart has-text-danger'></i>
-                            por <a target='_blank' class='has-text-warning'
-                                href='https://parzibyte.me/blog'>Parzibyte</a></p>
+                        <p>Última lectura: Hace <strong class='has-text-white'>{{ultimaLectura}}</strong> segundo(s)</p>                        
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    <footer>
+        <em>By KrlozMedina, visited <a style='text-decoration: none; color: #ffdd57;' href='http://krlozmedina.com'>krlozmedina.com</a></em>
+    </footer>
     <script src='https://unpkg.com/vue@2.6.12/dist/vue.min.js'> </script>
     <script>const INTERVALO_REFRESCO = 5000; new Vue({el: '#app', data: () => ({ ultimaLectura: 0, temperatura: 0, humedad: 0, }), mounted() { this.refrescarDatos(); }, methods: { async refrescarDatos() { try { const respuestaRaw = await fetch('./api'); const datos = await respuestaRaw.json(); this.ultimaLectura = datos.u; this.temperatura = datos.t; this.humedad = datos.h; setTimeout(() => { this.refrescarDatos(); }, INTERVALO_REFRESCO); } catch (e) { setTimeout(() => { this.refrescarDatos(); }, INTERVALO_REFRESCO); } } }, computed: { claseTermometro() { if (this.temperatura <= 5) { return 'fa-thermometer-empty'; } else if (this.temperatura > 5 && this.temperatura <= 13) { return 'fa-thermometer-quarter'; } else if (this.temperatura > 13 && this.temperatura <= 21) { return 'fa-thermometer-half'; } else if (this.temperatura > 21 && this.temperatura <= 30) { return 'fa-thermometer-three-quarters'; } else { return 'fa-thermometer-full'; } } } }); </script>
 </body>
