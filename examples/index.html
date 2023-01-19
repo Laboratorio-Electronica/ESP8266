@@ -1,73 +1,60 @@
-<!DOCTYPE HTML>
-<html lang="en">
+<!DOCTYPE html>
+<html lang='es'>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://kit.fontawesome.com/e00844d238.js" crossorigin="anonymous"></script>
-    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
-    <style>
-        html {
-            font-family: Arial;
-            display: inline-block;
-            margin: 0px auto;
-            text-align: center;
-        }
-        h1 { font-size: 3.0rem; }
-        p { font-size: 3.0rem; }
-        .units { font-size: 1.2rem; }
-        .ds-labels {
-            font-size: 1.5rem;
-            vertical-align: middle;
-            padding-bottom: 15px;
-        }
-        .container{
-            display: flex;
-            justify-content: space-evenly;
-        }
-    </style>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ESP Input Form</title>
-    <script>
-        function submitMessage() {
-            alert("Guardamos los datos en la placa Nodemcu por  ESP SPIFFS");
-            setTimeout(function () { document.location.reload(false); }, 500);
-        }
-    </script>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Sensor de temperatura - By Parzibyte</title>
+    <!-- <link rel='stylesheet' href='https://unpkg.com/bulma@0.9.1/css/bulma.min.css'> -->
+    <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
 </head>
 
 <body>
-    <h1>Ingenico Colombia</h1>
-    <p>
-        <span class="ds-labels">Hoy es</span>
-        <span id="fecha">%inputString%</span>
-    </p>
-    <p>
-        <span class="ds-labels">Hora</span>
-        <span id="hora">%inputString2%</span>
-    </p>
-    <h2>Termohigr&oacute;metro</h2>
-    <div class="container">
-        <p>
-            <i class="fas fa-thermometer-half" style="color:#059e8a;"></i>
-            <span class="ds-labels">Temperatura</span>
-            <span id="temperaturec">%inputString3%</span>
-        </p>
-        <p>
-            <i class="fa-solid fa-droplet" style="color:#059e8a;"></i>
-            <span class="ds-labels">Humedad</span>
-            <span id="humidity">%inputString4%</span>
-        </p>
-    </div>
-    <footer>
-        <em>By KrlozMedina, visited <a href="http://krlozmedina.com">krlozmedina.com</a></em>
-    </footer>
+    <style>
+        body{
+            background-color: #395B64;
+            color: rgb(196, 195, 195);
+            text-align: center;
+            font-family: BlinkMacSystemFont,-apple-system,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+        }
+        .columns{
+            display: flex;
+            justify-content: space-evenly;
+            padding: 50px 0;
+        }
+    </style>
+    <section id='app' class='hero is-link is-fullheight'>
+        <div class='hero-body'>
+            <div class='container'>
+                <div class='columns has-text-centered'>
+                    <div class='column'>
+                        <h1 style='font-size: 2.5rem'>Termómetro</h1> <i class='fa' :class='claseTermometro'
+                            style='font-size: 4rem;'></i>
+                    </div>
+                </div>
+                <div class='columns'>
+                    <div class='column has-text-centered'>
+                        <h2 class='is-size-4 has-text-warning'>Temperatura</h2>
+                        <h2 class='is-size-1'>{{temperatura}}°C</h2>
+                    </div>
+                    <div class='column has-text-centered'>
+                        <h2 class='is-size-4 has-text-warning'>Humedad</h2>
+                        <h2 class='is-size-1'>{{humedad}}%</h2>
+                    </div>
+                </div>
+                <div class='columns'>
+                    <div class='column'>
+                        <p>Última lectura: Hace <strong class='has-text-white'>{{ultimaLectura}}</strong> segundo(s)</p>
+                        <p class='is-size-5'><i class='fa fa-code'></i> con <i class='fa fa-heart has-text-danger'></i>
+                            por <a target='_blank' class='has-text-warning'
+                                href='https://parzibyte.me/blog'>Parzibyte</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src='https://unpkg.com/vue@2.6.12/dist/vue.min.js'> </script>
+    <script>const INTERVALO_REFRESCO = 5000; new Vue({el: '#app', data: () => ({ ultimaLectura: 0, temperatura: 0, humedad: 0, }), mounted() { this.refrescarDatos(); }, methods: { async refrescarDatos() { try { const respuestaRaw = await fetch('./api'); const datos = await respuestaRaw.json(); this.ultimaLectura = datos.u; this.temperatura = datos.t; this.humedad = datos.h; setTimeout(() => { this.refrescarDatos(); }, INTERVALO_REFRESCO); } catch (e) { setTimeout(() => { this.refrescarDatos(); }, INTERVALO_REFRESCO); } } }, computed: { claseTermometro() { if (this.temperatura <= 5) { return 'fa-thermometer-empty'; } else if (this.temperatura > 5 && this.temperatura <= 13) { return 'fa-thermometer-quarter'; } else if (this.temperatura > 13 && this.temperatura <= 21) { return 'fa-thermometer-half'; } else if (this.temperatura > 21 && this.temperatura <= 30) { return 'fa-thermometer-three-quarters'; } else { return 'fa-thermometer-full'; } } } }); </script>
 </body>
 
-<script type="text/javascript">
-    function actualizar() { location.reload(true); }
-    //FunciÃ³n para actualizar cada 4 segundos(4000 milisegundos)
-    setInterval("actualizar()", 4000);
-</script>
 </html>

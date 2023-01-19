@@ -31,7 +31,7 @@ También tengo canal de YouTube: https://www.youtube.com/channel/UCroP4BTWjfM0Ck
 #include <DHT_U.h>
 #include <Arduino.h>
 
-#define PIN_CONEXION_DHT 0
+#define PIN_CONEXION_DHT D2
 #define TIPO_SENSOR DHT11
 #define LED_DE_ESTADO 2
 
@@ -59,6 +59,7 @@ void setup(void)
 
   sensor.begin();
   // Aquí puedes agregar varias redes. La tarjeta se conectará a la más cercana
+  wifiMulti.addAP("IngenicoLAB", "Lab@ingenico1");
   wifiMulti.addAP("Krloz Medina", "F@mili@571112");
   // wifiMulti.addAP("Otra red", "Contraseña");
 
