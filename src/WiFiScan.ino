@@ -118,14 +118,16 @@ void loop(void) {
     }
 
     lastUpdateSuccess = millis();
-    humidity = newHumidity;
-    temperature = newTemperature;
+    // humidity = newHumidity;
+    humidity = newHumidity + 9.286411;
+    // temperature = newTemperature;
+    temperature = newTemperature - 1.719268;
     lastUpdate = 0;
     successDHT();
 
         // Hora de envió de datos
     // if ((currentHour==14 && currentMinute==40) || (currentHour==14 && currentMinute==43)) {
-    if (currentMinute==10) {
+    if (currentMinute==0 && (currentHour==7 || currentHour==17)) {
       // Buffer para escribir datos en JSON
       char buffer[150];
       sprintf(buffer, "{\"id\":\"%s\",\"time\":\"%s\",\"date\":\"%i-%s-%i %s\",\"humidity\":\"%.2f\",\"temperature\":\"%.2f\",\"ubiety\":\"%s\"}", id, time, monthDay, currentMonthName, currentYear, formattedTime, humidity, temperature, ubieties[ubiety]);
