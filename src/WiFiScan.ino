@@ -22,7 +22,7 @@ WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "co.pool.ntp.org", -18000, 60000);
 
 // Variables
-int lastUpdate = 60000, ubiety = 0;
+int lastUpdate = 60000, ubiety = 1;
 long intervalUpdate = 30000;   // Debería ser mayor que 2000
 unsigned long lastUpdateSuccess = 0;
 float humidity = 0, temperature = 0;
@@ -118,10 +118,12 @@ void loop(void) {
     }
 
     lastUpdateSuccess = millis();
-    // humidity = newHumidity;
-    humidity = newHumidity + 9.286411;
     // temperature = newTemperature;
-    temperature = newTemperature - 1.719268;
+    // temperature = newTemperature - 1.74927;  //Warehouse
+    temperature = newTemperature - 1.39809;  //Laboratory
+    // humidity = newHumidity;
+    // humidity = newHumidity + 8.49641;  //Warehouse
+    humidity = newHumidity + 4.00421;  //Laboratory
     lastUpdate = 0;
     successDHT();
 
@@ -130,7 +132,7 @@ void loop(void) {
     if (currentMinute==0 && (currentHour==7 || currentHour==17)) {
       // Buffer para escribir datos en JSON
       char buffer[150];
-      sprintf(buffer, "{\"id\":\"%s\",\"time\":\"%s\",\"date\":\"%i-%s-%i %s\",\"humidity\":\"%.2f\",\"temperature\":\"%.2f\",\"ubiety\":\"%s\"}", id, time, monthDay, currentMonthName, currentYear, formattedTime, humidity, temperature, ubieties[ubiety]);
+      sprintf(buffer, "{\"id\":\"%s\",\"time\":\"%s\",\"date\":\"%i-%s-%i %s\",\"humidity\":\"%.0f\",\"temperature\":\"%.1f\",\"ubiety\":\"%s\"}", id, time, monthDay, currentMonthName, currentYear, formattedTime, humidity, temperature, ubieties[ubiety]);
       Serial.println(buffer);
 
       // Envió de los datos a AWS
@@ -163,7 +165,7 @@ void loop(void) {
 
 void homePage()
 {
-  server.send(200, "text/html", "<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Termohigrómetro</title><link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'></head><body><style>body{background-color:#395b64;color:#c4c3c3;text-align:center;font-family:BlinkMacSystemFont,-apple-system,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,'Fira Sans','Droid Sans','Helvetica Neue',Helvetica,Arial,sans-serif}.container{height:90vh;display:flex;flex-direction:column;justify-content:space-evenly}.columns{display:flex;justify-content:space-evenly;flex-wrap:wrap}.is-size-4{font-size:32px;color:#ffdd57;margin:0}.is-size-1{font-size:40px;margin:0}</style><section id='app' class='hero is-link is-fullheight'><div class='hero-body'><div class='container'><div class='columns has-text-centered'><div class='column'><h1 style='font-size:2.5rem'>Termohigrómetro Bodega</h1><i class='fa' :class='claseTermometro' style='font-size:4rem'></i></div></div><div class='columns'><div class='column has-text-centered'><h2 class='is-size-4 has-text-warning'>temperature</h2><h2 class='is-size-1'>{{temperature}}°C</h2></div><div class='column has-text-centered'><h2 class='is-size-4 has-text-warning'>humidity</h2><h2 class='is-size-1'>{{humidity}}%</h2></div></div><div class='columns'><div class='column'><p>Última lectura: Hace <strong class='has-text-white'>{{ultimaLectura}}</strong> segundo(s)</p></div></div></div></div></section><footer><em>By KrlozMedina, visited <a style='text-decoration:none;color:#ffdd57' href='http://krlozmedina.com'>krlozmedina.com</a></em></footer><script src='https://unpkg.com/vue@2.6.12/dist/vue.min.js'></script><script>const INTERVALO_REFRESCO = 10000; new Vue({el: '#app', data: () => ({ ultimaLectura: 0, temperature: 0, humidity: 0, }), mounted() { this.refrescarDatos(); }, methods: { async refrescarDatos() { try { const respuestaRaw = await fetch('./api'); const datos = await respuestaRaw.json(); this.ultimaLectura = datos.u; this.temperature = datos.t; this.humidity = datos.h; setTimeout(() => { this.refrescarDatos(); }, INTERVALO_REFRESCO); } catch (e) { setTimeout(() => { this.refrescarDatos(); }, INTERVALO_REFRESCO); } } }, computed: { claseTermometro() { if (this.temperature <= 5) { return 'fa-thermometer-empty'; } else if (this.temperature > 5 && this.temperature <= 13) { return 'fa-thermometer-quarter'; } else if (this.temperature > 13 && this.temperature <= 21) { return 'fa-thermometer-half'; } else if (this.temperature > 21 && this.temperature <= 30) { return 'fa-thermometer-three-quarters'; } else { return 'fa-thermometer-full'; } } } });</script></body></html>");
+  server.send(200, "text/html", "<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Termohigrómetro</title><link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'></head><body><style>body{background-color:#395b64;color:#c4c3c3;text-align:center;font-family:BlinkMacSystemFont,-apple-system,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,'Fira Sans','Droid Sans','Helvetica Neue',Helvetica,Arial,sans-serif}.container{height:90vh;display:flex;flex-direction:column;justify-content:space-evenly}.columns{display:flex;justify-content:space-evenly;flex-wrap:wrap}.is-size-4{font-size:32px;color:#ffdd57;margin:0}.is-size-1{font-size:40px;margin:0}</style><section id='app' class='hero is-link is-fullheight'><div class='hero-body'><div class='container'><div class='columns has-text-centered'><div class='column'><h1 style='font-size:2.5rem'>Termohigrómetro Laboratorio</h1><i class='fa' :class='claseTermometro' style='font-size:4rem'></i></div></div><div class='columns'><div class='column has-text-centered'><h2 class='is-size-4 has-text-warning'>temperature</h2><h2 class='is-size-1'>{{temperature}}°C</h2></div><div class='column has-text-centered'><h2 class='is-size-4 has-text-warning'>humidity</h2><h2 class='is-size-1'>{{humidity}}%</h2></div></div><div class='columns'><div class='column'><p>Última lectura: Hace <strong class='has-text-white'>{{ultimaLectura}}</strong> segundo(s)</p></div></div></div></div></section><footer><em>By KrlozMedina, visited <a style='text-decoration:none;color:#ffdd57' href='http://krlozmedina.com'>krlozmedina.com</a></em></footer><script src='https://unpkg.com/vue@2.6.12/dist/vue.min.js'></script><script>const INTERVALO_REFRESCO = 10000; new Vue({el: '#app', data: () => ({ ultimaLectura: 0, temperature: 0, humidity: 0, }), mounted() { this.refrescarDatos(); }, methods: { async refrescarDatos() { try { const respuestaRaw = await fetch('./api'); const datos = await respuestaRaw.json(); this.ultimaLectura = datos.u; this.temperature = datos.t; this.humidity = datos.h; setTimeout(() => { this.refrescarDatos(); }, INTERVALO_REFRESCO); } catch (e) { setTimeout(() => { this.refrescarDatos(); }, INTERVALO_REFRESCO); } } }, computed: { claseTermometro() { if (this.temperature <= 5) { return 'fa-thermometer-empty'; } else if (this.temperature > 5 && this.temperature <= 13) { return 'fa-thermometer-quarter'; } else if (this.temperature > 13 && this.temperature <= 21) { return 'fa-thermometer-half'; } else if (this.temperature > 21 && this.temperature <= 30) { return 'fa-thermometer-three-quarters'; } else { return 'fa-thermometer-full'; } } } });</script></body></html>");
 }
 
 
@@ -181,7 +183,7 @@ void apiPage()
 
   // Buffer para escribir datos en JSON
   char buffer[50];
-  sprintf(buffer, "{\"t\":%.2f,\"h\":%.2f,\"u\":%d}", temperature, humidity, tiempoTranscurrido);
+  sprintf(buffer, "{\"t\":%.1f,\"h\":%.0f,\"u\":%d}", temperature, humidity, tiempoTranscurrido);
 
   server.send(200, "application/json", buffer);
 }
